@@ -15,8 +15,6 @@ Kasten, F. and Young, A. T. (1989). Revised optical air mass tables and
 approximation formula. Applied Optics 28(22), 4735-4738.
 """
 
-from __future__ import annotations
-
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from math import cos, exp, pi, radians, sin, tan

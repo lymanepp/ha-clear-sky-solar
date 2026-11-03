@@ -1,13 +1,12 @@
-from __future__ import annotations
+"""Clear-Sky Solar sensors."""
 
 from homeassistant.components.sensor import SensorEntity, SensorEntityDescription
 from homeassistant.components.sensor.const import SensorDeviceClass, SensorStateClass
-from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import UnitOfIrradiance
 from homeassistant.core import HomeAssistant
-from homeassistant.helpers.entity_platform import AddEntitiesCallback
+from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 
-from . import ClearSkyData
+from . import ClearSkyConfigEntry
 from .const import DHI, DNI, DOMAIN, GHI
 from .coordinator import ClearSkyCoordinator
 from .entity import ClearSkySolarEntity
@@ -15,8 +14,8 @@ from .entity import ClearSkySolarEntity
 
 async def async_setup_entry(
     hass: HomeAssistant,
-    entry: ConfigEntry[ClearSkyData],
-    async_add_entities: AddEntitiesCallback,
+    entry: ClearSkyConfigEntry,
+    async_add_entities: AddConfigEntryEntitiesCallback,
 ) -> None:
     """Set up the Clear-Sky Solar sensors from config entry."""
     coordinator = entry.runtime_data.coordinator

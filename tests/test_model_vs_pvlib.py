@@ -1,7 +1,5 @@
 """Compare the pure-Python Ineichen model to pvlib's reference implementation."""
 
-from __future__ import annotations
-
 from datetime import UTC, datetime
 
 import numpy as np

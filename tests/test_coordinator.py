@@ -1,7 +1,6 @@
-from __future__ import annotations
-
 from homeassistant.core import HomeAssistant
 import pytest
+from pytest_homeassistant_custom_component.common import MockConfigEntry
 
 from custom_components.clear_sky_solar.const import DHI, DNI, GHI
 from custom_components.clear_sky_solar.coordinator import ClearSkyCoordinator
@@ -9,9 +8,9 @@ from custom_components.clear_sky_solar.coordinator import ClearSkyCoordinator
 
 @pytest.mark.asyncio
 async def test_coordinator_update_returns_expected_keys(
-    hass: HomeAssistant, patch_third_party
+    hass: HomeAssistant, config_entry: MockConfigEntry, patch_third_party
 ) -> None:
-    coordinator = ClearSkyCoordinator(hass)
+    coordinator = ClearSkyCoordinator(hass, config_entry)
     data = await coordinator.async_update_clear_sky_estimates()
     assert set(data.keys()) == {GHI, DNI, DHI}
     assert data[GHI] == pytest.approx(111.0)
@@ -21,9 +20,9 @@ async def test_coordinator_update_returns_expected_keys(
 
 @pytest.mark.asyncio
 async def test_coordinator_refresh_populates_data(
-    hass: HomeAssistant, patch_third_party
+    hass: HomeAssistant, config_entry: MockConfigEntry, patch_third_party
 ) -> None:
-    coordinator = ClearSkyCoordinator(hass)
+    coordinator = ClearSkyCoordinator(hass, config_entry)
     await coordinator.async_refresh()
     assert coordinator.data is not None
     assert GHI in coordinator.data

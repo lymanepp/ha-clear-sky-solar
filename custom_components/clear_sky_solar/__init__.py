@@ -2,13 +2,13 @@
 
 from dataclasses import dataclass
 
-from homeassistant.components.sensor.const import DOMAIN as SENSOR_DOMAIN
 from homeassistant.config_entries import ConfigEntry
+from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant
 
 from .coordinator import ClearSkyCoordinator
 
-PLATFORMS = [SENSOR_DOMAIN]
+PLATFORMS = [Platform.SENSOR]
 
 
 @dataclass
@@ -18,12 +18,13 @@ class ClearSkyData:
     coordinator: ClearSkyCoordinator
 
 
-async def async_setup_entry(
-    hass: HomeAssistant, entry: ConfigEntry[ClearSkyData]
-) -> bool:
+type ClearSkyConfigEntry = ConfigEntry[ClearSkyData]
+
+
+async def async_setup_entry(hass: HomeAssistant, entry: ClearSkyConfigEntry) -> bool:
     """Set up Clear-Sky Solar from a config entry."""
-    coordinator = ClearSkyCoordinator(hass)
+    coordinator = ClearSkyCoordinator(hass, entry)
+    await coordinator.async_config_entry_first_refresh()
     entry.runtime_data = ClearSkyData(coordinator=coordinator)
-    await coordinator.async_refresh()
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
     return True

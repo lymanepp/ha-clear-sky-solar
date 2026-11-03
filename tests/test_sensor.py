@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 from homeassistant.const import UnitOfIrradiance
 import pytest
 
@@ -13,8 +11,8 @@ from custom_components.clear_sky_solar.sensor import (
 pytestmark = pytest.mark.asyncio
 
 
-async def test_entities_created_and_metadata(hass, patch_third_party):
-    coordinator = ClearSkyCoordinator(hass)
+async def test_entities_created_and_metadata(hass, config_entry, patch_third_party):
+    coordinator = ClearSkyCoordinator(hass, config_entry)
     # Seed coordinator data so sensors have values
     _ = await coordinator.async_update_clear_sky_estimates()
 
@@ -30,8 +28,10 @@ async def test_entities_created_and_metadata(hass, patch_third_party):
         )
 
 
-async def test_native_values_surface_from_coordinator_direct(hass, patch_third_party):
-    coordinator = ClearSkyCoordinator(hass)
+async def test_native_values_surface_from_coordinator_direct(
+    hass, config_entry, patch_third_party
+):
+    coordinator = ClearSkyCoordinator(hass, config_entry)
     data = await coordinator.async_update_clear_sky_estimates()
     coordinator.data = data
 
@@ -42,8 +42,8 @@ async def test_native_values_surface_from_coordinator_direct(hass, patch_third_p
     assert sensors[DHI].native_value == pytest.approx(33.0)
 
 
-async def test_no_data_returns_none_direct(hass, patch_third_party):
-    coordinator = ClearSkyCoordinator(hass)
+async def test_no_data_returns_none_direct(hass, config_entry, patch_third_party):
+    coordinator = ClearSkyCoordinator(hass, config_entry)
     coordinator.data = None
 
     sensors = [ClearSkySolarSensor(coordinator, d) for d in SENSOR_DESCRIPTIONS]

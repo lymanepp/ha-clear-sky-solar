@@ -3,6 +3,7 @@
 from datetime import UTC, datetime
 import logging
 
+from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
 
@@ -15,12 +16,14 @@ _LOGGER = logging.getLogger(__name__)
 class ClearSkyCoordinator(DataUpdateCoordinator[dict[str, float]]):
     """Clear-Sky Solar data coordinator."""
 
-    def __init__(self, hass: HomeAssistant):
+    def __init__(self, hass: HomeAssistant, config_entry: ConfigEntry) -> None:
+        """Initialize the coordinator."""
         self._lat = float(hass.config.latitude or 0.0)
         self._lon = float(hass.config.longitude or 0.0)
         super().__init__(
             hass,
             _LOGGER,
+            config_entry=config_entry,
             name="clear_sky_solar_data",
             update_method=self.async_update_clear_sky_estimates,
             update_interval=UPDATE_INTERVAL,

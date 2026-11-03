@@ -1,6 +1,6 @@
 {
   "name": "lymanepp/clear_sky_solar",
-  "image": "mcr.microsoft.com/vscode/devcontainers/python:3.13-bullseye",
+  "image": "mcr.microsoft.com/devcontainers/python:3.14-trixie",
   "postCreateCommand": "scripts/setup",
   "forwardPorts": [8123],
   "portsAttributes": {

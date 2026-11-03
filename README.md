@@ -52,6 +52,8 @@ To use Clear-Sky Solar, follow the documentation for your preferred setup method
 
 ## Installation
 
+Requires Home Assistant 2026.10 or newer.
+
 ### Using [HACS](https://hacs.xyz/) (Recommended)
 1. Open HACS in Home Assistant.
 2. Go to the **Integrations** section.

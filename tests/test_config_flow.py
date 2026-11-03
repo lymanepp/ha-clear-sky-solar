@@ -1,39 +1,31 @@
-import importlib
-import inspect
+"""Config flow tests."""
 
-from homeassistant.config_entries import ConfigFlow
+from homeassistant.config_entries import SOURCE_USER
 from homeassistant.core import HomeAssistant
-import pytest
+from homeassistant.data_entry_flow import FlowResultType
+from pytest_homeassistant_custom_component.common import MockConfigEntry
+
+from custom_components.clear_sky_solar.const import DOMAIN
 
 
-@pytest.mark.asyncio
-async def test_user_flow_creates_entry(hass: HomeAssistant) -> None:
-    flow_mod = importlib.import_module("custom_components.clear_sky_solar.config_flow")
-    flow_cls = None
-    for obj in vars(flow_mod).values():
-        if (
-            inspect.isclass(obj)
-            and issubclass(obj, ConfigFlow)
-            and obj is not ConfigFlow
-        ):
-            flow_cls = obj
-            break
-    assert flow_cls is not None, "No ConfigFlow subclass found in config_flow.py"
-
-    flow = flow_cls()
-    flow.hass = hass
-    # Make the context writable to satisfy async_set_unique_id
-    flow.context = {}
-
-    step = getattr(flow, "async_step_user", None) or getattr(
-        flow, "async_step_init", None
+async def test_user_flow_creates_entry(hass: HomeAssistant, patch_third_party) -> None:
+    result = await hass.config_entries.flow.async_init(
+        DOMAIN, context={"source": SOURCE_USER}
     )
-    assert step is not None, "ConfigFlow is missing async_step_user/init"
+    assert result["type"] is FlowResultType.FORM
+    assert result["step_id"] == "user"
 
-    result = await step(user_input=None)
-    # Accept either form or immediate entry/abort depending on your flow
-    if result["type"] == "form":
-        result2 = await step(user_input={})
-        assert result2["type"] in {"create_entry", "abort"}
-    else:
-        assert result["type"] in {"create_entry", "abort"}
+    result = await hass.config_entries.flow.async_configure(result["flow_id"], {})
+    assert result["type"] is FlowResultType.CREATE_ENTRY
+    assert result["title"] == "Clear-Sky Solar"
+    assert result["data"] == {}
+
+
+async def test_only_one_entry_allowed(
+    hass: HomeAssistant, config_entry: MockConfigEntry
+) -> None:
+    result = await hass.config_entries.flow.async_init(
+        DOMAIN, context={"source": SOURCE_USER}
+    )
+    assert result["type"] is FlowResultType.ABORT
+    assert result["reason"] == "single_instance_allowed"

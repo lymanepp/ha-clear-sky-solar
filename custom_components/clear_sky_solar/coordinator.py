@@ -18,8 +18,6 @@ class ClearSkyCoordinator(DataUpdateCoordinator[dict[str, float]]):
 
     def __init__(self, hass: HomeAssistant, config_entry: ConfigEntry) -> None:
         """Initialize the coordinator."""
-        self._lat = float(hass.config.latitude or 0.0)
-        self._lon = float(hass.config.longitude or 0.0)
         super().__init__(
             hass,
             _LOGGER,
@@ -31,6 +29,13 @@ class ClearSkyCoordinator(DataUpdateCoordinator[dict[str, float]]):
 
     async def async_update_clear_sky_estimates(self) -> dict[str, float]:
         """Recalculate Clear-Sky Solar estimates."""
-        now = datetime.now(tz=UTC)
-        r = compute_clear_sky(self._lat, self._lon, now)
+        # Read the home location on every update so changes in Home Assistant's
+        # settings take effect without reloading the integration.
+        config = self.hass.config
+        r = compute_clear_sky(
+            config.latitude,
+            config.longitude,
+            datetime.now(tz=UTC),
+            elevation_m=config.elevation,
+        )
         return {GHI: r.ghi, DNI: r.dni, DHI: r.dhi}

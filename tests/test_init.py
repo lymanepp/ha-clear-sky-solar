@@ -38,3 +38,19 @@ async def test_setup_with_real_model(
     data = config_entry.runtime_data.coordinator.data
     assert set(data) == {"ghi", "dni", "dhi"}
     assert all(value >= 0.0 for value in data.values())
+
+
+async def test_unload_entry(
+    hass: HomeAssistant, config_entry: MockConfigEntry, patch_third_party
+) -> None:
+    assert await hass.config_entries.async_setup(config_entry.entry_id)
+    await hass.async_block_till_done()
+
+    assert await hass.config_entries.async_unload(config_entry.entry_id)
+    await hass.async_block_till_done()
+
+    assert config_entry.state is ConfigEntryState.NOT_LOADED
+    registry = er.async_get(hass)
+    entity_id = registry.async_get_entity_id("sensor", DOMAIN, f"{DOMAIN}_ghi")
+    assert entity_id is not None
+    assert hass.states.get(entity_id).state == "unavailable"

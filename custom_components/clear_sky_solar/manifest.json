@@ -8,5 +8,6 @@
   "iot_class": "calculated",
   "issue_tracker": "https://github.com/lymanepp/ha-clear-sky-solar/issues",
   "requirements": [],
+  "single_config_entry": true,
   "version": "0.0.1"
 }

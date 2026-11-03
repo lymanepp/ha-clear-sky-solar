@@ -1,10 +1,15 @@
 from __future__ import annotations
 
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta, timezone
+from math import cos, radians
 
 import pytest
 
-from custom_components.clear_sky_solar.model import ClearSkyResult, compute_clear_sky
+from custom_components.clear_sky_solar.model import (
+    ClearSkyResult,
+    apparent_solar_elevation,
+    compute_clear_sky,
+)
 
 LAT, LON = 37.7749, -122.4194  # San Francisco-ish
 
@@ -69,3 +74,28 @@ def test_hazier_means_less_beam_and_global(tl_low: float, tl_high: float) -> Non
     assert cs_hazy.ghi < cs_clear.ghi
     # Diffuse remains bounded and not dominating on clear-sky
     assert cs_hazy.dhi <= cs_hazy.ghi
+
+
+def test_components_close_on_ghi() -> None:
+    # GHI = DHI + DNI * cos(zenith) by construction
+    when = datetime(2024, 3, 20, 19, 0, 0, tzinfo=UTC)
+    cs = compute_clear_sky(LAT, LON, when)
+    cos_zenith = cos(radians(90.0 - apparent_solar_elevation(LAT, LON, when)))
+    assert cs.ghi == pytest.approx(cs.dhi + cs.dni * cos_zenith)
+
+
+def test_naive_and_offset_timestamps_match_utc() -> None:
+    when_utc = datetime(2024, 6, 21, 20, 0, 0, tzinfo=UTC)
+    when_naive = when_utc.replace(tzinfo=None)
+    when_pdt = when_utc.astimezone(timezone(timedelta(hours=-7)))
+    expected = compute_clear_sky(LAT, LON, when_utc)
+    assert compute_clear_sky(LAT, LON, when_naive) == expected
+    assert compute_clear_sky(LAT, LON, when_pdt) == expected
+
+
+def test_higher_site_gets_more_irradiance() -> None:
+    when = datetime(2024, 6, 21, 20, 0, 0, tzinfo=UTC)
+    sea = compute_clear_sky(LAT, LON, when, elevation_m=0.0)
+    mountain = compute_clear_sky(LAT, LON, when, elevation_m=2000.0)
+    assert mountain.ghi > sea.ghi
+    assert mountain.dni > sea.dni

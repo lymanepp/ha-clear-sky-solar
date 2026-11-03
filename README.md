@@ -33,6 +33,14 @@ The total solar radiation per unit area measured on a horizontal surface on the 
 
 ---
 
+## Model
+
+Values come from the [Ineichen-Perez](https://pvlib-python.readthedocs.io/en/stable/reference/generated/pvlib.clearsky.ineichen.html) clear-sky model, implemented in pure Python (pvlib can't be installed on Home Assistant OS). It matches pvlib's implementation to within 0.5 W/m² for GHI and DHI and 2 W/m² for DNI, in every hour of a year at the test sites.
+
+The model's accuracy depends on site altitude and Linke turbidity (atmospheric haze, typically 2–5). The integration currently uses sea level and a turbidity of 3.0.
+
+---
+
 ## Usage
 
 To use Clear-Sky Solar, follow the documentation for your preferred setup method.

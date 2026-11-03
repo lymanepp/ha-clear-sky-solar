@@ -27,16 +27,16 @@ async def async_setup_entry(
 class ClearSkySolarSensor(ClearSkySolarEntity, SensorEntity):
     """Representation of Clear-Sky Solar Irradiance sensor (GHI, DNI, etc.)."""
 
-    def __init__(self, coordinator: ClearSkyCoordinator, desc: SensorEntityDescription):
-        """
-        Initialize the sensor with the DataUpdateCoordinator and sensor description.
-        """
+    def __init__(
+        self, coordinator: ClearSkyCoordinator, desc: SensorEntityDescription
+    ) -> None:
+        """Initialize the sensor from the coordinator and its description."""
         super().__init__(coordinator)
         self.entity_description = desc
         self._attr_unique_id = f"{DOMAIN}_{desc.key}"
 
     @property
-    def native_value(self) -> float | None:  # type: ignore[override]
+    def native_value(self) -> float | None:
         """Return the current value from the coordinator data."""
         if self.coordinator.data:
             return self.coordinator.data.get(self.entity_description.key)
@@ -46,7 +46,7 @@ class ClearSkySolarSensor(ClearSkySolarEntity, SensorEntity):
 SENSOR_DESCRIPTIONS: list[SensorEntityDescription] = [
     SensorEntityDescription(
         key=GHI,
-        name="Clear-Sky GHI",
+        translation_key=GHI,
         device_class=SensorDeviceClass.IRRADIANCE,
         state_class=SensorStateClass.MEASUREMENT,
         native_unit_of_measurement=UnitOfIrradiance.WATTS_PER_SQUARE_METER,
@@ -54,7 +54,7 @@ SENSOR_DESCRIPTIONS: list[SensorEntityDescription] = [
     ),
     SensorEntityDescription(
         key=DNI,
-        name="Clear-Sky DNI",
+        translation_key=DNI,
         device_class=SensorDeviceClass.IRRADIANCE,
         state_class=SensorStateClass.MEASUREMENT,
         native_unit_of_measurement=UnitOfIrradiance.WATTS_PER_SQUARE_METER,
@@ -62,7 +62,7 @@ SENSOR_DESCRIPTIONS: list[SensorEntityDescription] = [
     ),
     SensorEntityDescription(
         key=DHI,
-        name="Clear-Sky DHI",
+        translation_key=DHI,
         device_class=SensorDeviceClass.IRRADIANCE,
         state_class=SensorStateClass.MEASUREMENT,
         native_unit_of_measurement=UnitOfIrradiance.WATTS_PER_SQUARE_METER,

@@ -2,7 +2,7 @@
 
 from homeassistant.config_entries import ConfigEntryState
 from homeassistant.core import HomeAssistant
-from homeassistant.helpers import entity_registry as er
+from homeassistant.helpers import device_registry as dr, entity_registry as er
 import pytest
 from pytest_homeassistant_custom_component.common import MockConfigEntry
 
@@ -26,6 +26,19 @@ async def test_setup_creates_sensors(
         assert state is not None
         assert float(state.state) == pytest.approx(value)
         assert state.attributes["unit_of_measurement"] == "W/m²"
+        assert entity_id == f"sensor.clear_sky_solar_{key}"
+        assert state.attributes["friendly_name"] == f"Clear-Sky Solar {key.upper()}"
+
+    # All three sensors belong to one service device
+    devices = dr.async_entries_for_config_entry(
+        dr.async_get(hass), config_entry.entry_id
+    )
+    assert len(devices) == 1
+    device = devices[0]
+    assert device.name == "Clear-Sky Solar"
+    assert device.entry_type is dr.DeviceEntryType.SERVICE
+    entities = er.async_entries_for_device(registry, device.id)
+    assert len(entities) == len(expected)
 
 
 async def test_setup_with_real_model(

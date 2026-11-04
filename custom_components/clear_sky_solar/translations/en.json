@@ -1,0 +1,26 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Clear-Sky Solar",
+        "description": "Adds sensors that estimate how much sunlight would reach your home under a cloudless sky. They use the home location and elevation from Home Assistant's settings, so there is nothing to configure."
+      }
+    },
+    "abort": {
+      "single_instance_allowed": "Clear-Sky Solar is already set up."
+    }
+  },
+  "entity": {
+    "sensor": {
+      "ghi": {
+        "name": "GHI"
+      },
+      "dni": {
+        "name": "DNI"
+      },
+      "dhi": {
+        "name": "DHI"
+      }
+    }
+  }
+}

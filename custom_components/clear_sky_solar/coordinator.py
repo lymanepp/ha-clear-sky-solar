@@ -16,6 +16,8 @@ _LOGGER = logging.getLogger(__name__)
 class ClearSkyCoordinator(DataUpdateCoordinator[dict[str, float]]):
     """Clear-Sky Solar data coordinator."""
 
+    config_entry: ConfigEntry
+
     def __init__(self, hass: HomeAssistant, config_entry: ConfigEntry) -> None:
         """Initialize the coordinator."""
         super().__init__(

@@ -13,7 +13,9 @@ LAT, LON = 37.7749, -122.4194  # San Francisco-ish
 
 
 def _assert_cs_ok(cs: ClearSkyResult) -> None:
-    assert cs.ghi >= 0 and cs.dni >= 0 and cs.dhi >= 0
+    assert cs.ghi >= 0
+    assert cs.dni >= 0
+    assert cs.dhi >= 0
     assert cs.ghi >= cs.dhi  # diffuse cannot exceed global for clear-sky
 
 
@@ -56,7 +58,7 @@ def test_horizon_zero() -> None:
     assert cs.dhi == 0
 
 
-@pytest.mark.parametrize("tl_low,tl_high", [(2.2, 5.0), (2.5, 4.0)])
+@pytest.mark.parametrize(("tl_low", "tl_high"), [(2.2, 5.0), (2.5, 4.0)])
 def test_hazier_means_less_beam_and_global(tl_low: float, tl_high: float) -> None:
     when = datetime(2024, 6, 21, 20, 0, 0, tzinfo=UTC)
     cs_clear = compute_clear_sky(

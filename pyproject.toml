@@ -121,3 +121,7 @@ split-on-trailing-comma = false
 
 [tool.ruff.lint.mccabe]
 max-complexity = 25
+
+[tool.ruff.lint.per-file-ignores]
+# Tests compare against literal expected values by design.
+"tests/**" = ["PLR2004"]

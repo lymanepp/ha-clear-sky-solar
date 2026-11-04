@@ -1,18 +1,12 @@
 [project]
 name = "ha-clear-sky-solar"
 requires-python = ">=3.14.2"
-dependencies = [
-    "aiohttp"
-]
 description = "Clear-Sky Solar"
 readme = {file = "README.md", content-type = "text/markdown"}
-license = {text = "MIT License"}
+license = "AGPL-3.0-or-later"
 authors = [
   {name = "Lyman Epp"}
 ]
-
-[project.optional-dependencies]
-bs4 = ["beautifulsoup4"]
 
 [project.urls]
 "Repository" = "https://github.com/lymanepp/ha-clear-sky-solar"
@@ -115,7 +109,6 @@ ignore = [
 
 [tool.ruff.lint.isort]
 force-sort-within-sections = true
-known-first-party = ["pynws"]
 combine-as-imports = true
 split-on-trailing-comma = false
 

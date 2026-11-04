@@ -1,6 +1,6 @@
 # Clear-Sky Solar Integration for Home Assistant
 
-[![HACS Badge](https://img.shields.io/badge/HACS-Default-41BDF5.svg?style=for-the-badge)](https://github.com/hacs/integration)
+[![HACS Badge](https://img.shields.io/badge/HACS-Custom-41BDF5.svg?style=for-the-badge)](https://hacs.xyz/docs/faq/custom_repositories/)
 
 Clear-Sky Solar provides calculated sensors for Home Assistant.
 
@@ -43,10 +43,7 @@ The model's accuracy depends on site altitude and Linke turbidity (atmospheric h
 
 ## Usage
 
-To use Clear-Sky Solar, follow the documentation for your preferred setup method.
-
-### UI/Frontend (Config Flow)
-- Access the integration setup via the Home Assistant UI.
+Go to **Settings → Devices & services → Add integration**, choose **Clear-Sky Solar**, and select **Submit**. There is nothing to configure.
 
 ---
 
@@ -56,25 +53,14 @@ Requires Home Assistant 2026.10 or newer.
 
 ### Using [HACS](https://hacs.xyz/) (Recommended)
 1. Open HACS in Home Assistant.
-2. Go to the **Integrations** section.
-3. Search for **Clear-Sky Solar** and install the integration.
-4. Restart Home Assistant.
+2. Open the menu (⋮) and choose **Custom repositories**.
+3. Add `https://github.com/lymanepp/ha-clear-sky-solar` with type **Integration**.
+4. Search for **Clear-Sky Solar** and download it.
+5. Restart Home Assistant.
 
 ### Manual Installation
-1. Clone the repository or download the source code:
-    ```bash
-    git clone https://github.com/lymanepp/ha-clear-sky-solar.git
-    cd ha-clear-sky-solar
-    # If you want a specific version, check out its tag:
-    # e.g., git checkout 1.0.0
-    ```
-
-2. Copy the `custom_components` folder into your Home Assistant configuration directory:
-    ```bash
-    cp -r custom_components $hacs_config_folder
-    ```
-    Alternatively, extract the `custom_components` folder from the source release and place it in your Home Assistant configuration directory.
-
+1. Download `clear_sky_solar.zip` from the [latest release](https://github.com/lymanepp/ha-clear-sky-solar/releases/latest).
+2. Extract it into `custom_components/clear_sky_solar/` inside your Home Assistant configuration directory (the folder that contains `configuration.yaml`).
 3. Restart Home Assistant.
 
 ---
@@ -82,3 +68,9 @@ Requires Home Assistant 2026.10 or newer.
 ## Additional Notes
 
 - Check the [project repository](https://github.com/lymanepp/ha-clear-sky-solar) for updates or troubleshooting information.
+
+---
+
+## License
+
+[AGPL-3.0](LICENSE.md)

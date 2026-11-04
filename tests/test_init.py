@@ -10,7 +10,7 @@ from custom_components.clear_sky_solar.const import DOMAIN
 
 
 async def test_setup_creates_sensors(
-    hass: HomeAssistant, config_entry: MockConfigEntry, patch_third_party
+    hass: HomeAssistant, config_entry: MockConfigEntry, mock_model
 ) -> None:
     assert await hass.config_entries.async_setup(config_entry.entry_id)
     await hass.async_block_till_done()
@@ -54,7 +54,7 @@ async def test_setup_with_real_model(
 
 
 async def test_unload_entry(
-    hass: HomeAssistant, config_entry: MockConfigEntry, patch_third_party
+    hass: HomeAssistant, config_entry: MockConfigEntry, mock_model
 ) -> None:
     assert await hass.config_entries.async_setup(config_entry.entry_id)
     await hass.async_block_till_done()

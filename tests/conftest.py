@@ -1,11 +1,12 @@
-# tests/conftest.py
-from unittest.mock import AsyncMock, patch
+"""Shared test fixtures."""
+
+from unittest.mock import patch
 
 import pytest
 from pytest_homeassistant_custom_component.common import MockConfigEntry
 
-# Use the same keys the integration exports
-from custom_components.clear_sky_solar.const import DHI, DNI, DOMAIN, GHI
+from custom_components.clear_sky_solar.const import DOMAIN
+from custom_components.clear_sky_solar.model import ClearSkyResult
 
 
 @pytest.fixture(autouse=True)
@@ -22,18 +23,10 @@ def config_entry(hass) -> MockConfigEntry:
 
 
 @pytest.fixture
-def patch_third_party():
-    """Stub out any third-party math so tests are deterministic."""
-    payload = {GHI: 111.0, DNI: 222.0, DHI: 33.0}
-
-    with (
-        patch(
-            "custom_components.clear_sky_solar.coordinator.ClearSkyCoordinator.async_update_clear_sky_estimates",
-            new=AsyncMock(return_value=payload),
-        ),
-        patch(
-            "custom_components.clear_sky_solar.coordinator.ClearSkyCoordinator._async_update_data",
-            new=AsyncMock(return_value=payload),
-        ),
-    ):
-        yield
+def mock_model():
+    """Replace the irradiance model with fixed values; the coordinator still runs."""
+    with patch(
+        "custom_components.clear_sky_solar.coordinator.compute_clear_sky",
+        return_value=ClearSkyResult(ghi=111.0, dni=222.0, dhi=33.0),
+    ) as compute:
+        yield compute

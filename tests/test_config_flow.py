@@ -8,7 +8,7 @@ from pytest_homeassistant_custom_component.common import MockConfigEntry
 from custom_components.clear_sky_solar.const import DOMAIN
 
 
-async def test_user_flow_creates_entry(hass: HomeAssistant, patch_third_party) -> None:
+async def test_user_flow_creates_entry(hass: HomeAssistant, mock_model) -> None:
     result = await hass.config_entries.flow.async_init(
         DOMAIN, context={"source": SOURCE_USER}
     )

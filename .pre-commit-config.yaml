@@ -3,9 +3,9 @@ repos:
   rev: v0.17.3
   hooks:
     - id: ruff-check
-      files: ^custom_components/
+      files: ^(custom_components|tests)/
     - id: ruff-format
-      files: ^custom_components/
+      files: ^(custom_components|tests)/
 - repo: https://github.com/pre-commit/mirrors-mypy
   rev: v2.4.1
   hooks:
